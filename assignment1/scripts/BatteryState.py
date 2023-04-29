@@ -3,14 +3,27 @@
 import rospy
 import random
 from std_msgs.msg import Bool
-
+import roslaunch 
+#from assignment1 import Empty
+from std_srvs.srv import Empty
 
 batteryduration=39
 
+
+def InitMap():
+    rospy.loginfo('Waiting for map to be loaded...')
+    rospy.wait_for_service('initmap_service')
+        
+    service_client = rospy.ServiceProxy('initmap_service', Empty)
+        
+         
+    response = service_client()
+    #rospy.wait_for_message('initmap_service/complete', Empty)
+
 def BatteryState():
-    #rospy.set_param('ImInE', True)
+    rospy.set_param('ImInE', True)
     pub = rospy.Publisher('BatteryState', Bool, queue_size=10)
-    rospy.init_node('batterystatus', anonymous=True)
+    
     rate = rospy.Rate(1) # 1hz
     batterylevel = batteryduration
     while not rospy.is_shutdown():
@@ -35,6 +48,8 @@ def BatteryState():
 if __name__ == '__main__':
     
     try:
+        rospy.init_node('batterystatus', anonymous=True)
+        InitMap()
         BatteryState()
     except rospy.ROSInterruptException:
         pass
