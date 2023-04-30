@@ -13,7 +13,7 @@ def find_substrings(strings_list):
             start_index = string.find("#", end_index)
             end_index = string.find(">", start_index)
     print (matched_substrings)
-
+    return matched_substrings
 
 
 armcli = ArmorClient("example", "ontoRef")
