@@ -6,11 +6,22 @@ import smach_ros
 import time
 from assignment1 import Empty
 from std_msgs.msg import String
+from armor_api.armor_client import ArmorClient
 
 battery_callback(msg):
     return msg.data
     
-
+def admitted_destinations(strings_list):
+    matched_substrings = []
+    for string in strings_list:
+        start_index = string.find("#")
+        end_index = string.find(">")
+        while start_index != -1 and end_index != -1:
+            substring = string[start_index + 1 : end_index]
+            matched_substrings.append(substring)
+            start_index = string.find("#", end_index)
+            end_index = string.find(">", start_index)
+    return matched_substrings
 
 
 class WaitForMapState(smach.State):
@@ -35,6 +46,15 @@ class MoveInCorridorsState(smach.State):
 
     def execute(self, userdata):        
         rospy.loginfo('Moving in corridors...')
+        
+        armcli = ArmorClient("example", "ontoRef")
+        canreach = armcli.call('QUERY','OBJECTPROP','IND',['canReach', 'Robot1'])
+        find_substrings (canreach.queried_objects)    
+
+        
+        
+        
+        
         # Implement your code to move in corridors here
         # Check if the battery is low or an urgent room has been reached
         battery_low = False # replace with your code
