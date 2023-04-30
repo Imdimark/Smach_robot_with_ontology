@@ -10,12 +10,11 @@ from std_msgs.msg import Bool
 from std_srvs.srv import Empty
 
 
-
 def service_callback(request):
-    url = 'https://github.com/buoncubi/topological_map/blob/main/topological_map.owl'
+    '''url = 'https://github.com/buoncubi/topological_map/blob/main/topological_map.owl'
     filename = 'topological_map.owl'
 
-    subprocess.call(['wget', url, '-O', filename])
+    subprocess.call(['wget', url, '-O', filename])'''
 
 
     rospy.wait_for_service('armor_interface_srv')
@@ -36,9 +35,12 @@ def service_callback(request):
     armcli.call('ADD','OBJECTPROP','IND',['hasDoor', 'C2', 'D4'])
     armcli.call('ADD','OBJECTPROP','IND',['hasDoor', 'C2', 'D5'])
     armcli.call('ADD','OBJECTPROP','IND',['hasDoor', 'C2', 'D7'])
+    armcli.call('ADD','OBJECTPROP','IND',['isIn', 'Robot1', 'C1'])
+    
     armcli.call('DISJOINT','IND','',['R1','R2','R3','R4','E','C1','C2','D1','D2','D3','D4','D5','D6','D7'])
     armcli.call('REASON','','',[''])
 
+    
     rospy.loginfo('Map loaded, closing the node InitMapNode')
     
     return []
