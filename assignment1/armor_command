@@ -1,0 +1,101 @@
+parametro sto caricando rosparam set /ImInE True
+  
+rosservice call /armor_interface_srv "armor_request:
+  client_name: 'example'
+  reference_name: 'ontoRef'
+  command: 'LOAD'
+  primary_command_spec: 'FILE'
+  secondary_command_spec: ''
+  args: ['/root/Desktop/topological_map/topological_map.owl', 'http://bnc/exp-rob-lab/2022-23', 'true', 'PELLET', 'false']"
+
+  
+/////////////////////////////  
+rosservice call /armor_interface_srv "armor_request:
+  client_name: 'example'
+  reference_name: 'ontoRef'
+  command: 'ADD'
+  primary_command_spec: 'OBJECTPROP'
+  secondary_command_spec: 'IND'
+  args: ['hasDoor', 'C1', 'D1']"
+  
+rosservice call /armor_interface_srv "armor_request:
+  client_name: 'example'
+  reference_name: 'ontoRef'
+  command: 'ADD'
+  primary_command_spec: 'OBJECTPROP'
+  secondary_command_spec: 'IND'
+  args: ['hasDoor', 'C1', 'D2']"
+  
+rosservice call /armor_interface_srv "armor_request:
+  client_name: 'example'
+  reference_name: 'ontoRef'
+  command: 'ADD'
+  primary_command_spec: 'OBJECTPROP'
+  secondary_command_spec: 'IND'
+  args: ['hasDoor', 'R1', 'D1']"
+  
+rosservice call /armor_interface_srv "armor_request:
+  client_name: 'example'
+  reference_name: 'ontoRef'
+  command: 'ADD'
+  primary_command_spec: 'OBJECTPROP'
+  secondary_command_spec: 'IND'
+  args: ['hasDoor', 'R2', 'D2']"
+
+rosservice call /armor_interface_srv "armor_request:
+  client_name: 'example'
+  reference_name: 'ontoRef'
+  command: 'DISJOINT'
+  primary_command_spec: 'IND'
+  secondary_command_spec: ''
+  args: ['R1', 'R2', 'D1', 'D2','C1']" 
+/////////////////////////////////////////////////////
+rosservice call /armor_interface_srv "armor_request:
+  client_name: 'example'
+  reference_name: 'ontoRef'
+  command: 'ADD'
+  primary_command_spec: 'OBJECTPROP'
+  secondary_command_spec: 'IND'
+  args: ['isIn', 'Robot1', 'R1']"
+  
+rosservice call /armor_interface_srv "armor_request:
+  client_name: 'example'
+  reference_name: 'ontoRef'
+  command: 'REPLACE'
+  primary_command_spec: 'OBJECTPROP'
+  secondary_command_spec: 'IND'
+  args: ['isIn', 'Robot1',  'R2', 'R1']"
+ 
+rosservice call /armor_interface_srv "armor_request:
+  client_name: 'example'
+  reference_name: 'ontoRef'
+  command: 'QUERY'
+  primary_command_spec: 'OBJECTPROP'
+  secondary_command_spec: 'IND'
+  args: ['canReach', 'Robot1']" 
+  
+
+/////////////////////////////////////////////////////
+rosservice call /armor_interface_srv "armor_request:
+  client_name: 'example'
+  reference_name: 'ontoRef'
+  command: 'LOAD'
+  primary_command_spec: 'FILE'
+  secondary_command_spec: ''
+  args: ['/root/Desktop/topological_map/topological_map.owl', 'http://bnc/exp-rob-lab/2022-23', 'true', 'PELLET', 'false']"
+  
+  
+  
+rosservice call /armor_interface_srv "armor_request:
+  client_name: 'example'
+  reference_name: 'ontoRef'
+  command: 'REASON'
+  primary_command_spec: ''
+  secondary_command_spec: ''
+  args: ['']" 
+  
+  
+  
+  
+
+  
