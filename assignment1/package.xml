@@ -51,11 +51,14 @@
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>rospy</build_depend>
   <build_depend>smach</build_depend>
+  <build_depend>message_generation</build_depend>
   <build_export_depend>rospy</build_export_depend>
   <build_export_depend>smach</build_export_depend>
   <exec_depend>rospy</exec_depend>
   <exec_depend>smach</exec_depend>
-
+  <exec_depend>message_runtime</exec_depend>
+  <depend>std_msgs</depend>
+  <depend>actionlib_msgs</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
