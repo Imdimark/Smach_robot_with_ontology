@@ -23,6 +23,11 @@ def admitted_destinations(strings_list):
             end_index = string.find(">", start_index)
     return matched_substrings
 
+def choose_randomly(strings_list, character):
+    selected_string = None
+    while selected_string is None or character not in selected_string:
+        selected_string = random.choice(strings_list)
+    return selected_string
 
 class WaitForMapState(smach.State):
     def __init__(self):
@@ -33,10 +38,6 @@ class WaitForMapState(smach.State):
         rospy.wait_for_service('initmap_service')
         service_client = rospy.ServiceProxy('initmap_service', Empty)
         response = service_client()
-        
-
-        #where i can go?
-        #move to random corridor
         rospy.set_param('ImInE', False)
         return 'map_loaded'
 
@@ -45,12 +46,14 @@ class MoveInCorridorsState(smach.State):
         smach.State.__init__(self, outcomes=['battery_low', 'urgent_room_reached', 'interrupted'])
 
     def execute(self, userdata):        
-        rospy.loginfo('Moving in corridors...')
-        
         armcli = ArmorClient("example", "ontoRef")
         canreach = armcli.call('QUERY','OBJECTPROP','IND',['canReach', 'Robot1'])
-        find_substrings (canreach.queried_objects)    
-
+        reachable_place_list = find_substrings (canreach.queried_objects)   
+        
+        choose_randomly (reachable_place_list, "C") #C are all the corridors available
+        
+        
+        rospy.loginfo('Moving in corridors...')
         
         
         
