@@ -1,8 +1,7 @@
 import rospy
 import actionlib
 from time import sleep
-from time import sleep
-from assignment1.msg import PlanningAction
+from assignment1.msg import PlanningAction,PlanningActionResult,PlanningActionGoal
 
 def execute_cb(goal, server):
     target_room = goal.target_room
@@ -27,7 +26,7 @@ if __name__ == "__main__":
     rospy.init_node("movements_server")
     server = actionlib.SimpleActionServer(
         "move_to_position",
-        MoveToPositionAction,
+        PlanningAction,
         execute_cb=execute_cb,
         auto_start=False,
     )

@@ -6,7 +6,7 @@ from std_msgs.msg import Bool
 import roslaunch 
 #from assignment1 import Empty
 from std_srvs.srv import Empty
-from assignment1.msg import PlanningAction
+from assignment1.msg import PlanningAction,PlanningActionResult,PlanningActionGoal
 
 batteryduration=39
 
@@ -20,16 +20,13 @@ batteryduration=39
          
     response = service_client()
     #rospy.wait_for_message('initmap_service/complete', Empty)'''
-def preempter():
-    client = actionlib.SimpleActionClient("move_to_position", PlanningAction)
-    client.wait_for_server()
-    client.cancel_goal()
-    rospy.loginfo("Battery is empty, preempting current goal, going to charge station")
+
 
 def BatteryState():
     rospy.set_param('ImInE', True)
     pub = rospy.Publisher('BatteryState', Bool, queue_size=10)
-    
+    client = actionlib.SimpleActionClient("move_to_position", PlanningAction)
+    client.wait_for_server()
     rate = rospy.Rate(1) # 1hz
     batterylevel = batteryduration
     while not rospy.is_shutdown():
@@ -44,7 +41,8 @@ def BatteryState():
             
         elif (not ImCharging) and batterylevel == 0: #Battery is empty
             batteryBool = False
-            preempter()
+            client.cancel_all_goals()
+            rospy.loginfo("Battery is empty, preempting current goal, going to charge station")
         
         elif ImCharging and batterylevel <= batteryduration: #charging 
             batterylevel = batterylevel + 1
