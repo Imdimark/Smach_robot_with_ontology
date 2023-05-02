@@ -4,12 +4,16 @@ import rospy
 import smach
 import smach_ros
 import time
-from assignment1 import Empty
 from std_msgs.msg import String
 from armor_api.armor_client import ArmorClient
 from assignment1.msg import PlanningAction
 
-battery_callback(msg):
+
+def urgent_room(probability):
+    return random.random() < probability
+
+
+def battery_callback(msg):
     return msg.data
     
 def extract_values(strings_list):
@@ -35,13 +39,13 @@ def move_to_position_client(x):
     client.wait_for_server()
 
     goal = MoveToPositionGoal()
-    goal.target_position = x  # Ad esempio, posizione da raggiungere
+    goal.target_room = x  # Ad esempio, posizione da raggiungere
     client.send_goal(goal)
-    armcli.call('ADD','OBJECTPROP','IND',['REPLACE', 'Robot1', 'C1', new__target_position]) 
-    rospy.loginfo('Moving in corridors...')
-    armcli.call('REASON','','',[''])
-    time.sleep(5) #simulating the movment of the robot
-    rospy.loginfo('Moving in corridors...')
+    #armcli.call('ADD','OBJECTPROP','IND',['REPLACE', 'Robot1', 'C1', new__target_position]) 
+    rospy.loginfo('Moving...')
+    #armcli.call('REASON','','',[''])
+    #time.sleep(5) #simulating the movment of the robot
+    #rospy.loginfo('Moving in corridors...')
 
     client.wait_for_result()
     result = client.get_result()
@@ -70,16 +74,17 @@ class MoveInCorridorsState(smach.State):
         canreach = armcli.call('QUERY','OBJECTPROP','IND',['canReach', 'Robot1'])
         reachable_place_list = extract_values (canreach.queried_objects)
         new__target_position = choose_randomly (reachable_place_list, "C") #C are all the corridors available
-        
         result = move_to_position_client(new__target_position)
+        there_is_urgent_room = urgent_room(0.2)
 
-        if result.reached:
+
+        if result.result:
             rospy.loginfo("Goal position reached")
-            if 
+            if not there_is_urgent_room:
                 rospy.loginfo("Goal position reached, no urgent rooms, continuing moving in corridors...")
                 return 'interrupted'
             else:
-                rospy.loginfo("Goal position reached, urgent room found, moving to room...")
+                rospy.loginfo("Goal position reached, urgent room found, moving to room...") ##the randomness will choose in the choose_randomly function
                 return 'urgent_room_reached'
         else:
             rospy.loginfo("Goal was preempted or failed")
@@ -100,7 +105,7 @@ class VisitRoomState(smach.State):
         
         result = move_to_position_client(new__target_position)
 
-        if result.reached:
+        if result.result:
             rospy.loginfo("Goal position reached, im in room")
             
         else:
@@ -124,7 +129,7 @@ class VisitRoomState(smach.State):
         
         result = move_to_position_client(new__target_position)
 
-        if result.reached:
+        if result.result:
             rospy.loginfo("Goal position reached, im in Corridor again")
             return 'room_visited'
             
@@ -140,28 +145,25 @@ class ChargingState(smach.State):
 
     def execute(self, userdata):
         rospy.loginfo('Moving to charging station...')
-        
         armcli = ArmorClient("example", "ontoRef")
         canreach = armcli.call('QUERY','OBJECTPROP','IND',['canReach', 'Robot1'])
         reachable_place_list = extract_values (canreach.queried_objects)
+        new__target_position = choose_randomly (reachable_place_list, "C") #C are all the corridors available
+               
+
         if "E" in reachable_place_list:
+            rospy.loginfo('Moving to charging station...')
             new__target_position = "E"
-        else:                   
+            result = move_to_position_client(new__target_position)
+
+        else:
+            rospy.loginfo('Moving to corridor before going to charging station...')                   
             new__target_position = choose_randomly (reachable_place_list, "C") #C are all the corridors available
-            ###fai il movimento
+            result = move_to_position_client(new__target_position)
+            rospy.loginfo('Moving to charging station...')
             new__target_position = "E"
-        
-        
-        ##fai il movimento
-        
-        armcli.call('ADD','OBJECTPROP','IND',['REPLACE', 'Robot1', 'C1', new__target_position]) 
-        rospy.loginfo('Moving to charging station...')
-        armcli.call('REASON','','',[''])
-        time.sleep(5) #simulating the movment of the robot
-        rospy.loginfo('Moving in corridors...')
+            result = move_to_position_client(new__target_position)
 
-
-        
         rospy.loginfo('Charging...')
         rospy.set_param('ImInE', True)
         batterystate = rospy.Subscriber('BatteryState', Bool, battery_callback)
@@ -174,7 +176,7 @@ class ChargingState(smach.State):
         return 'battery_full'
 
 def main():
-    rospy.init_node('smach_example')
+    rospy.init_node('fsm_node')
 
     # Create the top-level SMACH state machine
     sm = smach.StateMachine(outcomes=['mission_completed'])
@@ -196,7 +198,7 @@ def main():
 
     # Create and start the introspection server to visualize the SMACH state machine
     
-    sis = smach_ros.IntrospectionServer('smach_example', sm, '/SM_ROOT')
+    sis = smach_ros.IntrospectionServer('fsm', sm, '/SM_ROOT')
     sis.start()
 
     # Execute the SMACH state machine

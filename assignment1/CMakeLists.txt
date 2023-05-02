@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
   message_generation
   std_msgs
+  roslib
 )
 
 ## System dependencies are found with CMake's conventions
@@ -73,6 +74,7 @@ add_action_files(
  generate_messages(
    DEPENDENCIES
    std_msgs  # Or other packages containing msgs
+   actionlib_msgs
  )
 
 ################################################
@@ -107,7 +109,7 @@ add_action_files(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES assignment1
-   CATKIN_DEPENDS rospy smach #message_runtime
+   CATKIN_DEPENDS rospy smach std_msgs message_runtime actionlib_msgs 
 #  DEPENDS system_lib
 )
 
@@ -164,6 +166,9 @@ include_directories(
 catkin_install_python(PROGRAMS
     scripts/BatteryState.py
     scripts/ontology.py
+    scripts/fsm.py
+    scripts/movements.py
+    
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

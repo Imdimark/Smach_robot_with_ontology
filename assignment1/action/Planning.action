@@ -1,7 +1,7 @@
 # StringProcessing.action
 
 # Goal definition
-string input_string
+string target_room
 ---
 # Result definition
 bool result

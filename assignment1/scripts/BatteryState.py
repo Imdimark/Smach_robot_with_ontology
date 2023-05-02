@@ -39,7 +39,7 @@ def BatteryState():
         if (not ImCharging) and batterylevel > 0: #discharging 
             batterylevel = batterylevel - 1
             if batterylevel < 7:
-            rospy.loginfo("Battery is going too low")
+                rospy.loginfo("Battery is going too low")
             #batteryBool = True
             
         elif (not ImCharging) and batterylevel == 0: #Battery is empty
