@@ -7,7 +7,7 @@ import roslaunch
 #from assignment1 import Empty
 from std_srvs.srv import Empty
 from assignment1.msg import PlanningAction,PlanningActionResult,PlanningActionGoal
-
+import actionlib
 batteryduration=39
 
 
@@ -27,7 +27,7 @@ def BatteryState():
     pub = rospy.Publisher('BatteryState', Bool, queue_size=10)
     client = actionlib.SimpleActionClient("move_to_position", PlanningAction)
     client.wait_for_server()
-    rate = rospy.Rate(1) # 1hz
+    rate = rospy.Rate(0.3) # 0.3 hz
     batterylevel = batteryduration
     while not rospy.is_shutdown():
         ImCharging = rospy.get_param('ImInE')

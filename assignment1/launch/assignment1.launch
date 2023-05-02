@@ -1,0 +1,15 @@
+<launch>
+    
+
+    <!-- BatteryState node -->
+    <node name="battery_state" pkg="assignment1" type="BatteryState.py" launch-prefix="gnome-terminal --title='Battery State' --" output="screen"/>
+
+    <!-- movements node -->
+    <node name="movements" pkg="assignment1" type="movements.py" launch-prefix="gnome-terminal --title='Movements' --" output="screen"/>
+
+    <!-- ontology node -->
+    <node name="ontology" pkg="assignment1" type="ontology.py" launch-prefix="gnome-terminal --title='Ontology' --" output="screen"/>
+
+    <!-- fsm node -->
+    <node name="fsm" pkg="assignment1" type="fsm.py" launch-prefix="gnome-terminal --title='FSM' --" output="screen"/>
+</launch>

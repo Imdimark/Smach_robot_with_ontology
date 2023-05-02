@@ -13,7 +13,7 @@ def execute_cb(goal, server):
             break
         sleep(0.5)
 
-    result = MoveToPositionResult()
+    result = PlanningActionResult()
     result.result = success
 
     if success:

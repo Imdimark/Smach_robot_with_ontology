@@ -6,6 +6,7 @@ import smach_ros
 import time
 from std_msgs.msg import String
 from armor_api.armor_client import ArmorClient
+import actionlib
 from actionlib import SimpleActionClient
 from assignment1.msg import PlanningAction,PlanningActionResult,PlanningActionGoal
 from std_srvs.srv import Empty
@@ -36,10 +37,10 @@ def choose_randomly(strings_list, character):
     return selected_string
 
 def move_to_position_client(x):
-    client = actionlib.SimpleActionClient("move_to_position", MoveToPositionAction)
+    client = actionlib.SimpleActionClient("move_to_position", PlanningAction)
     client.wait_for_server()
 
-    goal = MoveToPositionGoal()
+    goal = PlanningActionGoal()
     goal.target_room = x  # Ad esempio, posizione da raggiungere
     client.send_goal(goal)
     #armcli.call('ADD','OBJECTPROP','IND',['REPLACE', 'Robot1', 'C1', new__target_position]) 
@@ -75,6 +76,7 @@ class MoveInCorridorsState(smach.State):
         canreach = armcli.call('QUERY','OBJECTPROP','IND',['canReach', 'Robot1'])
         reachable_place_list = extract_values (canreach.queried_objects)
         new__target_position = choose_randomly (reachable_place_list, "C") #C are all the corridors available
+        print ("new target position: " + new__target_position)
         result = move_to_position_client(new__target_position)
         there_is_urgent_room = urgent_room(0.2)
 

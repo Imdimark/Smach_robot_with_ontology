@@ -16,7 +16,6 @@ def service_callback(request):
 
     subprocess.call(['wget', url, '-O', filename])'''
 
-    print ("sono qui")
     #rospy.wait_for_service('armor_interface_srv')
 
     armcli = ArmorClient("example", "ontoRef")

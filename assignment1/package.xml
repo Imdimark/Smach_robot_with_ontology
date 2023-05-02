@@ -60,6 +60,7 @@
   <exec_depend>message_runtime</exec_depend>
   <depend>std_msgs</depend>
   <depend>actionlib_msgs</depend>
+  <depend>roslaunch</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
