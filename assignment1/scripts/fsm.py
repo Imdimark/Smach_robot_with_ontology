@@ -8,7 +8,7 @@ from std_msgs.msg import String
 from armor_api.armor_client import ArmorClient
 import actionlib
 from actionlib import SimpleActionClient
-from assignment1.msg import PlanningAction,PlanningActionResult,PlanningActionGoal
+from assignment1.msg import PlanningAction, PlanningResult, PlanningGoal
 from std_srvs.srv import Empty
 
 def urgent_room(probability):
@@ -40,15 +40,11 @@ def move_to_position_client(x):
     client = actionlib.SimpleActionClient("move_to_position", PlanningAction)
     client.wait_for_server()
 
-    goal = PlanningActionGoal()
+    goal = PlanningGoal()
+    print (type(x))
     goal.target_room = x  # Ad esempio, posizione da raggiungere
     client.send_goal(goal)
-    #armcli.call('ADD','OBJECTPROP','IND',['REPLACE', 'Robot1', 'C1', new__target_position]) 
-    rospy.loginfo('Moving...')
-    #armcli.call('REASON','','',[''])
-    #time.sleep(5) #simulating the movment of the robot
-    #rospy.loginfo('Moving in corridors...')
-
+    
     client.wait_for_result()
     result = client.get_result()
     return result
@@ -76,7 +72,9 @@ class MoveInCorridorsState(smach.State):
         canreach = armcli.call('QUERY','OBJECTPROP','IND',['canReach', 'Robot1'])
         reachable_place_list = extract_values (canreach.queried_objects)
         new__target_position = choose_randomly (reachable_place_list, "C") #C are all the corridors available
+        
         print ("new target position: " + new__target_position)
+        
         result = move_to_position_client(new__target_position)
         there_is_urgent_room = urgent_room(0.2)
 
@@ -192,7 +190,7 @@ def main():
         smach.StateMachine.add('MOVE_IN_CORRIDORS', MoveInCorridorsState(),
                                transitions={'battery_low': 'CHARGING',
                                             'urgent_room_reached': 'VISIT_ROOM',
-                                            'interrupted': 'mission_completed'})
+                                            'interrupted': 'MOVE_IN_CORRIDORS'})
         smach.StateMachine.add('VISIT_ROOM', VisitRoomState(),
                                transitions={'room_visited': 'MOVE_IN_CORRIDORS',
                                             'battery_low': 'CHARGING'})

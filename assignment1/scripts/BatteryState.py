@@ -6,7 +6,7 @@ from std_msgs.msg import Bool
 import roslaunch 
 #from assignment1 import Empty
 from std_srvs.srv import Empty
-from assignment1.msg import PlanningAction,PlanningActionResult,PlanningActionGoal
+from assignment1.msg import PlanningAction,PlanningResult,PlanningGoal
 import actionlib
 batteryduration=39
 
