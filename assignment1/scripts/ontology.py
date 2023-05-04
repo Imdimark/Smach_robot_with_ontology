@@ -35,7 +35,10 @@ def service_callback(request):
     armcli.call('ADD','OBJECTPROP','IND',['hasDoor', 'C2', 'D5'])
     armcli.call('ADD','OBJECTPROP','IND',['hasDoor', 'C2', 'D7'])
     armcli.call('ADD','OBJECTPROP','IND',['isIn', 'Robot1', 'E'])
-    
+    rospy.set_param('ActualPosition', 'E')
+    #rospy.set_param('IsChargingParam', False)
+
+
     armcli.call('DISJOINT','IND','',['R1','R2','R3','R4','E','C1','C2','D1','D2','D3','D4','D5','D6','D7'])
     armcli.call('REASON','','',[''])
 

@@ -7,6 +7,7 @@ from armor_api.armor_client import ArmorClient
 def simulating_movements(goal):
     armcli = ArmorClient("example", "ontoRef")
     target_room = goal.target_room #usefull for second assignment
+    print ("Target room" + target_room)
     success = True
     rospy.loginfo('Moving...')
     for _ in range(5):
@@ -21,18 +22,20 @@ def simulating_movements(goal):
     result.result = success
 
     if success:
-        armcli.call('ADD','OBJECTPROP','IND',['REPLACE', 'Robot1', 'C1', target_room]) 
-        
+        actual_position = rospy.get_param('ActualPosition')
+        armcli.call('REPLACE','OBJECTPROP','IND',['isIn', 'Robot1', actual_position, target_room]) 
+        print (actual_position, target_room)
         armcli.call('REASON','','',[''])
-        rospy.loginfo('Motion completed :)')
-        rospy.loginfo("Move action succeeded")
+        rospy.set_param('ActualPosition', target_room)
         server.set_succeeded(result)
+        rospy.loginfo("Move action succeeded, now robot is in room %s", target_room)
     else:
         server.set_preempted(result)
+    
 
 if __name__ == "__main__":
     rospy.init_node("movements_server")
-    
+    print ("loop main spin")
     
     server = actionlib.SimpleActionServer(
         "move_to_position",

@@ -1,5 +1,5 @@
 <launch>
-    
+    <param name="IsChargingParam" type="bool" value="False" />
 
     <!-- BatteryState node -->
     <node name="battery_state" pkg="assignment1" type="BatteryState.py" launch-prefix="gnome-terminal --title='Battery State' --" output="screen"/>
@@ -12,4 +12,5 @@
 
     <!-- fsm node -->
     <node name="fsm" pkg="assignment1" type="fsm.py" launch-prefix="gnome-terminal --title='FSM' --" output="screen"/>
+    
 </launch>
