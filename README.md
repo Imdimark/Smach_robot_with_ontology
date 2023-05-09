@@ -2,7 +2,8 @@
 
 note per scrivere il report
 
-
+download topological map
+install armor
 
 
 
