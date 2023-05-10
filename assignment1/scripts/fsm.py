@@ -39,11 +39,12 @@ def choose_randomly(strings_list, character):
         
     return selected_string
 
-def move_to_position_client(client, x):
+def move_to_position_client(client, x, skip):
     
     client.wait_for_server()
     goal = PlanningGoal()
     goal.target_room = x  # Ad esempio, posizione da raggiungere
+    goal.skip_batterycancel = skip # this is a boolean, if true the robot will not cancel the goal if it is moving to the charging station
     client.send_goal(goal)
     
     client.wait_for_result()
@@ -81,7 +82,7 @@ class MoveInCorridorsState(smach.State):
         
         reachable_place_list = extract_values (canreach.queried_objects)
         new__target_position = choose_randomly (reachable_place_list, "C") #C are all the corridors available
-        result = move_to_position_client(self.client, new__target_position)
+        result = move_to_position_client(self.client, new__target_position, False)
         there_is_urgent_room = urgent_room(0.2)
         print (there_is_urgent_room)
         
@@ -116,7 +117,7 @@ class VisitRoomState(smach.State):
 
         new__target_position = choose_randomly (reachable_place_list, "R") #R are all the reachable room available
         
-        result = move_to_position_client(self.client, new__target_position)
+        result = move_to_position_client(self.client, new__target_position, False)
 
         if result.result:
             rospy.loginfo("Goal position reached, im in room")
@@ -155,15 +156,15 @@ class ChargingState(smach.State):
         if "E" in reachable_place_list:
             rospy.loginfo('Moving to charging station...')
             new__target_position = "E"
-            result = move_to_position_client(self.client, new__target_position)
+            result = move_to_position_client(self.client, new__target_position,True)
 
         else:
             rospy.loginfo('Moving to corridor before going to charging station...')                   
             new__target_position = choose_randomly (reachable_place_list, "C") #C are all the corridors available
-            result = move_to_position_client(self.client, new__target_position)
+            result = move_to_position_client(self.client, new__target_position,True)
             rospy.loginfo('Moving to charging station...')
             new__target_position = "E"
-            result = move_to_position_client(self.client, new__target_position)
+            result = move_to_position_client(self.client, new__target_position,True)
 
         rospy.loginfo('Charging...')
         rospy.set_param('/IsChargingParam', True)

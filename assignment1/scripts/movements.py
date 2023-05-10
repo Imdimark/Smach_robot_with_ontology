@@ -9,22 +9,26 @@ import time
 
 def simulating_movements(goal):
     armcli = ArmorClient("example", "ontoRef")
-    target_room = goal.target_room #usefull for second assignment
+    target_room = goal.target_room 
     print ("Target room" + target_room)
     success = True
     rospy.loginfo('Moving...')
     motion_duration = rospy.get_param('MovingDurationParam')
-    for counter in range(motion_duration):
-        if server.is_preempt_requested():
-            rospy.loginfo("Moving action preempted")
-            success = False
-            break
-        
-        sleep(0.1)
+    if goal.skip_batterycancel == False:
+        for counter in range(motion_duration):
+            if server.is_preempt_requested():
+                rospy.loginfo("Moving action preempted")
+                success = False
+                break
+            
+            sleep(0.1)
+  
+    else:
+        sleep (motion_duration)
+
 
     result = PlanningResult()
     result.result = success
-
     if success:
         armcli.call('REASON','','',[''])
 
