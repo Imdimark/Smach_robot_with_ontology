@@ -15,7 +15,7 @@ def simulating_movements(goal):
     rospy.loginfo('Moving...')
     motion_duration = rospy.get_param('MovingDurationParam')
     if goal.skip_batterycancel == False:
-        for counter in range(motion_duration):
+        for counter in range(10*motion_duration):
             if server.is_preempt_requested():
                 rospy.loginfo("Moving action preempted")
                 success = False

@@ -1,9 +1,13 @@
 <launch>
+    
+    <!-- Launching the armor node -->
+    <node pkg="armor" type="execute" name="armor_service" args="it.emarolab.armor.ARMORMainService"/>
+    
     <!-- Setting the paarameter false, it will be true when in charge -->
     <param name="IsChargingParam" type="bool" value="False" />
 
     <!-- Setting the paarameter with the moving duration (in seconds) -->
-    <param name="MovingDurationParam"  value="2" />
+    <param name="MovingDurationParam"  value="3" />
 
     <!-- BatteryState node -->
     <node name="battery_state" pkg="assignment1" type="BatteryState.py" launch-prefix="gnome-terminal --title='Battery State' --" output="screen"/>

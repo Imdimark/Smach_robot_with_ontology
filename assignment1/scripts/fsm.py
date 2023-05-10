@@ -13,10 +13,7 @@ from std_srvs.srv import Empty
 
 def urgent_room(probability):
     return random.random() < probability
-    
-def battery_callback(msg):
-    return msg.data
-    
+       
 def extract_values(strings_list):
     matched_substrings = []
     for string in strings_list:
@@ -103,9 +100,12 @@ class VisitRoomState(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes=['room_visited', 'battery_low'])
         self.armcli = ArmorClient("example", "ontoRef")
-        self.batterystate = rospy.Subscriber('BatteryState', Bool, battery_callback)
+        self.batterystate = rospy.Subscriber('BatteryState', Bool, self.battery_callback)
         self.client = actionlib.SimpleActionClient("move_to_position", PlanningAction)
-
+    
+    def battery_callback(self, msg):
+        self.bs = msg.data
+    
     def execute(self, userdata):
         rospy.loginfo('Visiting room...')
         
@@ -132,7 +132,7 @@ class VisitRoomState(smach.State):
         
         rospy.loginfo('Ispetioning the room for 5 seconds...')
         while (rospy.Time.now() - start_time).to_sec() < 5.0:
-            if not self.batterystate:
+            if not self.bs:
                 return 'battery_low'
             rate.sleep()  # attendi il tempo necessario per mantenere la frequenza impostata
 
@@ -145,7 +145,10 @@ class ChargingState(smach.State):
         smach.State.__init__(self, outcomes=['battery_full'])
         self.armcli = ArmorClient("example", "ontoRef")
         self.client = actionlib.SimpleActionClient("move_to_position", PlanningAction)
-        self.batterystate = rospy.Subscriber('BatteryState', Bool, battery_callback)
+        self.batterystate = rospy.Subscriber('BatteryState', Bool, self.battery_callback)
+    
+    def battery_callback(self, msg):
+        self.bs = msg.data
 
     def execute(self, userdata):
         rospy.loginfo('Moving to charging station...')
@@ -169,7 +172,8 @@ class ChargingState(smach.State):
         rospy.loginfo('Charging...')
         rospy.set_param('/IsChargingParam', True)
         
-        while (not self.batterystate):{
+        
+        while (self.bs == False):{
             time.sleep(1)
         }
         

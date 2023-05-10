@@ -8,7 +8,7 @@ import roslaunch
 from std_srvs.srv import Empty
 from assignment1.msg import PlanningAction,PlanningResult,PlanningGoal
 import actionlib
-batteryduration=39
+batteryduration=40
 
 def BatteryState():
     
@@ -17,6 +17,7 @@ def BatteryState():
     client.wait_for_server()
     rate = rospy.Rate(0.3) # 0.3 hz
     batterylevel = batteryduration
+    batteryBool = True
     while not rospy.is_shutdown():
         ImCharging = rospy.get_param('IsChargingParam')
         #ImCharging = True
@@ -24,17 +25,20 @@ def BatteryState():
             batterylevel = batterylevel - 1
             if batterylevel < 7:
                 rospy.loginfo("Battery is going too low")
-            batteryBool = True
+            #batteryBool = True
             
         elif (not ImCharging) and batterylevel == 0: #Battery is empty
             batteryBool = False
             client.cancel_all_goals()
             rospy.loginfo("Battery is empty, preempting current goal, going to charge station")
         
-        elif ImCharging and batterylevel <= batteryduration: #charging 
-            batterylevel = batterylevel + 1
-            batteryBool = True
-            rospy.loginfo("Charging")
+        elif ImCharging and (batterylevel <= batteryduration): #charging 
+            if batterylevel == batteryduration:
+                rospy.loginfo("Battery is full")
+                batteryBool = True
+            else:
+                batterylevel = batterylevel + 1
+                rospy.loginfo("Charging")
 	
         rospy.loginfo("Battery level:" + str(batterylevel)) #batteryBool
         pub.publish(batteryBool)
