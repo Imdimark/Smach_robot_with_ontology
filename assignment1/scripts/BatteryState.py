@@ -8,10 +8,10 @@ import roslaunch
 from std_srvs.srv import Empty
 from assignment1.msg import PlanningAction,PlanningResult,PlanningGoal
 import actionlib
-batteryduration=40
+batteryduration=39
 
 def BatteryState():
-    #rospy.set_param('IsChargingParam', False) ########################### <---------------------
+    
     pub = rospy.Publisher('BatteryState', Bool, queue_size=10)
     client = actionlib.SimpleActionClient("move_to_position", PlanningAction)
     client.wait_for_server()
@@ -19,6 +19,7 @@ def BatteryState():
     batterylevel = batteryduration
     while not rospy.is_shutdown():
         ImCharging = rospy.get_param('IsChargingParam')
+        #ImCharging = True
         if (not ImCharging) and batterylevel > 0: #discharging 
             batterylevel = batterylevel - 1
             if batterylevel < 7:
@@ -34,17 +35,15 @@ def BatteryState():
             batterylevel = batterylevel + 1
             batteryBool = True
             rospy.loginfo("Charging")
-        else:
-            rospy.loginfo("Battery has been totally charged, now is full")
 	
-        rospy.loginfo(batterylevel) #batteryBool
+        rospy.loginfo("Battery level:" + str(batterylevel)) #batteryBool
         pub.publish(batteryBool)
         rate.sleep()
 
 if __name__ == '__main__':
     
     try:
-        rospy.init_node('batterystatus')#, anonymous=True
+        rospy.init_node('batterystatus', anonymous=True)#, anonymous=True
         BatteryState()
     except rospy.ROSInterruptException:
         pass

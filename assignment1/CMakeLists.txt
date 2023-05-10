@@ -168,7 +168,7 @@ catkin_install_python(PROGRAMS
     scripts/ontology.py
     scripts/fsm.py
     scripts/movements.py
-    
+    scripts/test_onto.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

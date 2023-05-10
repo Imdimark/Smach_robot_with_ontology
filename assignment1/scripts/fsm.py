@@ -32,8 +32,8 @@ def extract_values(strings_list):
 def choose_randomly(strings_list, character):
     selected_string = None
     actual_position = rospy.get_param('ActualPosition')
-    if actual_position in strings_list:
-        strings_list.remove(actual_position)
+    """if actual_position in strings_list:
+        strings_list.remove(actual_position)"""
     while selected_string is None or character not in selected_string:
         selected_string = random.choice(strings_list)
         
@@ -103,7 +103,7 @@ class VisitRoomState(smach.State):
         smach.State.__init__(self, outcomes=['room_visited', 'battery_low'])
         self.armcli = ArmorClient("example", "ontoRef")
         self.batterystate = rospy.Subscriber('BatteryState', Bool, battery_callback)
-
+        self.client = actionlib.SimpleActionClient("move_to_position", PlanningAction)
 
     def execute(self, userdata):
         rospy.loginfo('Visiting room...')
@@ -138,29 +138,12 @@ class VisitRoomState(smach.State):
         
         rospy.loginfo('Room inspected, going back to corridor...')
         return 'room_visited'
-        
-        
-        """canreach = armcli.call('QUERY','OBJECTPROP','IND',['canReach', 'Robot1'])
-        reachable_place_list = extract_values (canreach.queried_objects)
-        new__target_position = choose_randomly (reachable_place_list, "C") #C are all the corridors available
-        
-        result = move_to_position_client(new__target_position)
-
-        if result.result:
-            rospy.loginfo("Goal position reached, im in Corridor again")
-            return 'room_visited'
-            
-        else:
-            rospy.loginfo("Goal was preempted,going to charging station state")
-            return 'battery_low'"""
-
-
 
 class ChargingState(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes=['battery_full'])
         self.armcli = ArmorClient("example", "ontoRef")
-        
+        self.client = actionlib.SimpleActionClient("move_to_position", PlanningAction)
         self.batterystate = rospy.Subscriber('BatteryState', Bool, battery_callback)
 
     def execute(self, userdata):
@@ -168,7 +151,6 @@ class ChargingState(smach.State):
         canreach = self.armcli.call('QUERY','OBJECTPROP','IND',['canReach', 'Robot1'])
         reachable_place_list = extract_values (canreach.queried_objects)
         new__target_position = choose_randomly (reachable_place_list, "C") #C are all the corridors available
-               
 
         if "E" in reachable_place_list:
             rospy.loginfo('Moving to charging station...')
