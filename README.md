@@ -6,7 +6,7 @@ download topological map
 install armor
 
 
-
+troppo lento non riesce a fare il reason, troppo veloce non sta nei corridoi
 
 sudo apt-get install gnome-terminal
 
