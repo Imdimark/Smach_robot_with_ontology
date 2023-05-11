@@ -29,7 +29,7 @@ def extract_values(strings_list):
 def choose_randomly(strings_list, character):
     selected_string = None
     actual_position = rospy.get_param('ActualPosition')
-    """if actual_position in strings_list:
+    """if actual_position in strings_list: ##### already implemented in the ontology
         strings_list.remove(actual_position)"""
     while selected_string is None or character not in selected_string:
         selected_string = random.choice(strings_list)
@@ -78,7 +78,7 @@ class MoveInCorridorsState(smach.State):
         
         
         reachable_place_list = extract_values (canreach.queried_objects)
-        new__target_position = choose_randomly (reachable_place_list, "C") #C are all the corridors available
+        new__target_position = choose_randomly (reachable_place_list, "C") #C are all the corridors available <---------------------------
         result = move_to_position_client(self.client, new__target_position, False)
         there_is_urgent_room = urgent_room(0.2)
         print (there_is_urgent_room)
@@ -115,7 +115,7 @@ class VisitRoomState(smach.State):
         reachable_place_list = extract_values (canreach.queried_objects)
         
 
-        new__target_position = choose_randomly (reachable_place_list, "R") #R are all the reachable room available
+        new__target_position = choose_randomly (reachable_place_list, "R") #R are all the reachable room available <---------------
         
         result = move_to_position_client(self.client, new__target_position, False)
 
