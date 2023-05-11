@@ -71,7 +71,7 @@ class MoveInCorridorsState(smach.State):
         self.client = actionlib.SimpleActionClient("move_to_position", PlanningAction)
    
     def execute(self, userdata):      
-        
+        reachable_place_list_and_urgent = []
         #self.armcli.call('REASON','','',[''])
         canreach = self.armcli.call('QUERY','OBJECTPROP','IND',['canReach', 'Robot1'])
         print ("can reach:", canreach)
@@ -91,7 +91,7 @@ class MoveInCorridorsState(smach.State):
         
         if result.result:
             rospy.loginfo("Goal position reached")
-            if isurgent_list == []:
+            if reachable_place_list_and_urgent == []:
                 rospy.loginfo("Goal position reached, no urgent rooms, continuing moving in corridors...")
                 return 'interrupted'
             else:
