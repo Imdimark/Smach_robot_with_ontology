@@ -11,8 +11,8 @@ from actionlib import SimpleActionClient
 from assignment1.msg import PlanningAction, PlanningResult, PlanningGoal
 from std_srvs.srv import Empty
 
-def urgent_room(probability):
-    return random.random() < probability
+"""def urgent_room(probability):
+    return random.random() < probability"""
        
 def extract_values(strings_list):
     matched_substrings = []
@@ -66,7 +66,7 @@ class WaitForMapState(smach.State):
 
 class MoveInCorridorsState(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes=['battery_low', 'urgent_room_reached', 'interrupted'])
+        smach.State.__init__(self, outcomes=['battery_low', 'urgent_room_reached', 'interrupted'], output_keys=['MoveInCorridorsState_output'])
         self.armcli = ArmorClient("example", "ontoRef")
         self.client = actionlib.SimpleActionClient("move_to_position", PlanningAction)
    
@@ -75,22 +75,30 @@ class MoveInCorridorsState(smach.State):
         #self.armcli.call('REASON','','',[''])
         canreach = self.armcli.call('QUERY','OBJECTPROP','IND',['canReach', 'Robot1'])
         print ("can reach:", canreach)
-        
-        
+
         reachable_place_list = extract_values (canreach.queried_objects)
         new__target_position = choose_randomly (reachable_place_list, "C") #C are all the corridors available <---------------------------
         result = move_to_position_client(self.client, new__target_position, False)
-        there_is_urgent_room = urgent_room(0.2)
-        print (there_is_urgent_room)
+    
+        isurgent_list_query =  self.armcli.call('QUERY','IND','CLASS',['URGENT'])
+        isurgent_list = extract_values (isurgent_list_query.queried_objects)
+        
+        ############################################################################        
+        canreach = self.armcli.call('QUERY','OBJECTPROP','IND',['canReach', 'Robot1'])
+        reachable_place_list = extract_values (canreach.queried_objects)       
+        reachable_place_list_and_urgent = list(set(reachable_place_list).intersection(isurgent_list))
+        ###########################################################################
         
         if result.result:
             rospy.loginfo("Goal position reached")
-            if not there_is_urgent_room:
+            if isurgent_list == []:
                 rospy.loginfo("Goal position reached, no urgent rooms, continuing moving in corridors...")
                 return 'interrupted'
             else:
                 rospy.loginfo("Goal position reached, urgent room found, moving to room...") ##the randomness will choose in the choose_randomly function
+                userdata.MoveInCorridorsState_output = reachable_place_list_and_urgent ## giving to the next state the list of urgent and reachable rooms 
                 return 'urgent_room_reached'
+                
         else:
             rospy.loginfo("Goal was preempted or failed")
             return 'battery_low'
@@ -98,7 +106,7 @@ class MoveInCorridorsState(smach.State):
 
 class VisitRoomState(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes=['room_visited', 'battery_low'])
+        smach.State.__init__(self, outcomes=['room_visited', 'battery_low'], input_keys=['MoveInCorridorsState_output'])
         self.armcli = ArmorClient("example", "ontoRef")
         self.batterystate = rospy.Subscriber('BatteryState', Bool, self.battery_callback)
         self.client = actionlib.SimpleActionClient("move_to_position", PlanningAction)
@@ -107,15 +115,10 @@ class VisitRoomState(smach.State):
         self.bs = msg.data
     
     def execute(self, userdata):
-        rospy.loginfo('Visiting room...')
+        rospy.loginfo('Visiting room...')     
         
         
-        canreach = self.armcli.call('QUERY','OBJECTPROP','IND',['canReach', 'Robot1'])
-
-        reachable_place_list = extract_values (canreach.queried_objects)
-        
-
-        new__target_position = choose_randomly (reachable_place_list, "R") #R are all the reachable room available <---------------
+        new__target_position = choose_randomly (userdata.MoveInCorridorsState_output, "R") #R are all the reachable room available <---------------
         
         result = move_to_position_client(self.client, new__target_position, False)
 
@@ -131,7 +134,7 @@ class VisitRoomState(smach.State):
         
         
         rospy.loginfo('Ispetioning the room for 5 seconds...')
-        while (rospy.Time.now() - start_time).to_sec() < 5.0:
+        while (rospy.Time.now() - start_time).to_sec() < rospy.get_param('RoomInspectionTime'):
             if not self.bs:
                 return 'battery_low'
             rate.sleep()  # attendi il tempo necessario per mantenere la frequenza impostata
