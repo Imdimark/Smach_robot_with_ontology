@@ -1,5 +1,14 @@
 # SmachRobot_ROS
 
+
+
+## Installation and running procedure
+Some mandatory prerequisites are needed:
+- Download the project: '''git clone https://github.com/Imdimark/SmachRobot_ROS'''
+- Install gnome terminal  the nodes in multiple sudo apt-get install gnome-terminal
+
+
+
 note per scrivere il report
 
 download topological map
@@ -8,7 +17,7 @@ https://protege.stanford.edu/
 
 troppo lento non riesce a fare il reason, troppo veloce non sta nei corridoi
 
-sudo apt-get install gnome-terminal
+
 
 miglioramenti futuri:fare in modo che arrivi alla stazione di ricarica con la batteria residua
 
