@@ -1,21 +1,51 @@
 # SmachRobot_ROS
 
+1. [Installation and running procedure](#installation)
 
 
-## Installation and running procedure
+
+
+## Installation and running procedure <a name="installation"></a>
 Some mandatory prerequisites are needed:
-- Download the project: '''git clone https://github.com/Imdimark/SmachRobot_ROS'''
-- Install gnome terminal  the nodes in multiple sudo apt-get install gnome-terminal
+- Download the project in your workspace:
+  - ```cd <myworkspace>/src/```
+  - ```git clone https://github.com/Imdimark/SmachRobot_ROS```
+- Install gnome terminal: ```sudo apt-get install gnome-terminal```
+- Install armor, following this guideline: https://github.com/EmaroLab/armor
+- Install smach: http://wiki.ros.org/smach
+- Download the topological map ``` git clone https://github.com/buoncubi/topological_map``` under the project folder( ```roscd SmachRobot_ROS``` )
+
+First running of the code:
+- If the roscore is not running let's do: ```roscore & ```
+- Go under the workspace ```cd <myworkspace>/ ```
+- Build the workspace ```catkin make ```
+- Finally is possible to launch the code ```roslaunch assignment1 assignment1.launch  ```
+
+Running of the code:
+- Check if the rocore is running, otherwise do the step 1 of the previous paragraph
+- launch the code ```roslaunch assignment1 assignment1.launch  ```
+
+
+**Optional**, if you want to edit the topological map, using protegé install the editor following this guideline: https://protege.stanford.edu/
+
+In this last case be careful that if you save the edits made through ARMOR you can have some errors, please follow this guide: 
+Due to an internal bug of Protégé, when you save an ontology manipulated with aRMOR, and then try to open it with Protégé, you might face an error similar to `Cause: Don't know how to translate SWRL Atom: _:genid2147483693`. If this occurs you will not able to open the ontology. However, you can open it by following these steps.
+
+1. Open the ontology as a text file.
+2. Search for `// Rules` (which should be the last section of the file).
+3. Delete the `Rules` section. Be careful that the `</rdf:RDF>` statement should remain as the last line of the file.
+4. Save the ontology from the text editor.
+5. Now you can open the ontology with Protégé.
+
+Note that the 3rd point deletes all the SWRL rules from the ontology. Hence, the inferences of the reasoner are different from the ones that you got within ROS. To fully visualise the reasoner inferences from Protégé you can proceed in two ways.
+
+1. Open the original ontology with Protégé, and copy-paste the three `SWLRule` (from the `SWRL` tab) back into the ontology manipulated with aRMOR. Now you can update the reasoner and check the knowledge it infers through Protégé.
+2. Make aRMOR save the ontology by exporting the `INFERENCES` (there is a dedicated command for it). In this way, you do not have to copy-paste back the rules in the ontology as in point 1. However, in this way, Protégé would not let you see any differences between the knowledge you asserted in the ontology, and the knowledge inferred by the reasoner.
 
 
 
-note per scrivere il report
 
-download topological map
-install armor
-https://protege.stanford.edu/
 
-troppo lento non riesce a fare il reason, troppo veloce non sta nei corridoi
 
 
 
