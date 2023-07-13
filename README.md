@@ -16,6 +16,7 @@ In order to implement the mainly in corridor behaviour, the urgent threshold in 
 ![rosgraph](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/c9032477-4bab-49e4-8fcd-098970b08404)
 
 
+![Screenshot 2023-07-13 155637](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/471cb60b-42c2-490f-9482-4c0e266a9d8f)
 
 
 
