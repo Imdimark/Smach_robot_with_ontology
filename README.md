@@ -13,6 +13,8 @@ sudo apt-get install gnome-terminal
 miglioramenti futuri:fare in modo che arrivi alla stazione di ricarica con la batteria residua
 
 In order to implement the mainly in corridor behaviour, the urgent threshold in the ontology has been changed.
+![rosgraph](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/c9032477-4bab-49e4-8fcd-098970b08404)
+
 
 
 
