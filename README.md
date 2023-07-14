@@ -1,6 +1,8 @@
 # SmachRobot_ROS
 
+## Index of contents:
 1. [Introduction](#introduction)
+2. [Software architecture](#sofar)
 3. [Installation and running procedure](#installation)
 
 
@@ -10,6 +12,13 @@ The project at hand focuses on the development and implementation of a surveilla
 The operational structure of the robot is based on a topological map, which it constructs using incoming data about the connections between various rooms, corridors, and doorways labeled as C1, C2, R1, R2, R3, and D1 to D6 respectively. This information aids the robot in maneuvering around its environment and effectively fulfilling its surveillance duties.
 The robot's actions follow an endless cycle: it moves to a new location, waits for a while, and then moves again. This process continues until the robot's energy levels run low, at which point it returns to location 'E' for a recharge before resuming its routine.
 When the robot's battery is not low, it navigates through the environment with a specific policy in mind. It's programmed to stay primarily in the corridors, keeping a closer eye on them. However, if a nearby room hasn't been inspected for a while, the robot will deviate from its path to check the room, ensuring complete and thorough surveillance.
+
+## Software architecture <a name="sofar"></a>
+
+### State Viewpoint
+![UML drawio](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/c05c14ef-7a2f-4e12-8f1d-90d232c6b0c8)
+
+
 
 ## Installation and running procedure <a name="installation"></a>
 Some generic requirements can be necessary(like Python and ros), but the suggestion is to start with this container (based on Linux):  [carms84/exproblab](https://hub.docker.com/r/carms84/exproblab) 
@@ -51,7 +60,9 @@ Note that the 3rd point deletes all the SWRL rules from the ontology. Hence, the
 2. Make aRMOR save the ontology by exporting the `INFERENCES` (there is a dedicated command for it). In this way, you do not have to copy-paste back the rules in the ontology as in point 1. However, in this way, Protégé would not let you see any differences between the knowledge you asserted in the ontology, and the knowledge inferred by the reasoner.
 
 
+![UML drawio](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/d8306a3a-8e4d-4c79-a1b3-f12376af0b95)
 
+![Screenshot 2023-07-14 100123](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/7cb4dc51-8ce3-4f5f-a7c0-62932a981d32)
 
 
 
@@ -67,7 +78,3 @@ In order to implement the mainly in corridor behaviour, the urgent threshold in 
 
 
 
-![image](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/5085a9b5-4172-486f-894a-04a6ba1a9bef)
-
-  
-![48739a0a-97ee-45ea-bc50-2c873329e5ed](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/82110b94-637e-4d00-a1e3-1c59031e0e9e)
