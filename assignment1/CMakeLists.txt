@@ -169,6 +169,7 @@ catkin_install_python(PROGRAMS
     scripts/fsm.py
     scripts/movements.py
     scripts/test_onto.py
+    scripts/sending_goal.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

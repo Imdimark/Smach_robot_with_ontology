@@ -6,7 +6,7 @@ rosservice call /armor_interface_srv "armor_request:
   command: 'LOAD'
   primary_command_spec: 'FILE'
   secondary_command_spec: ''
-  args: ['/root/Desktop/topological_map/topological_map.owl', 'http://bnc/exp-rob-lab/2022-23', 'true', 'PELLET', 'false']"
+  args: ['/root/ros_ws/src/assignment2/topological_map/topological_map.owl', 'http://bnc/exp-rob-lab/2022-23', 'true', 'PELLET', 'false']"
 
   
 /////////////////////////////  

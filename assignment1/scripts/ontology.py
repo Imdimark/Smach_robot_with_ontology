@@ -7,11 +7,29 @@ import subprocess
 import re
 import math
 from std_msgs.msg import Bool
-#from assignment1 import Empty
 from std_srvs.srv import Empty
 from armor_api.armor_client import ArmorClient
+"""
+.. module:: InitMapNode
+    :platform: Unix
+    :synopsis: This module provides a ROS service for initializing a topological map.
+
+.. moduleauthor:: Giovanni Di Marco <giovannidimarco06@gmail.com>
+
+"""
 
 def service_callback(request):
+    """
+    This function is the callback for the initmap_service. It loads the topological map, 
+    adds properties to the ontology, initialize the time in which the rooms have been visited (useful for the urgency threshold)and updates timestamps.
+
+    :param request: The request message received from the service client.
+    :type request: Empty
+
+    :rtype: list
+    :return: Empty list, since no specific return value is required for this service.
+
+    """
 
     rospy.wait_for_service('armor_interface_srv')
     # initialization of the map
@@ -34,20 +52,14 @@ def service_callback(request):
     armcli.call('ADD','OBJECTPROP','IND',['hasDoor', 'C2', 'D7'])
     armcli.call('DISJOINT','IND','',['R1','R2','R3','R4','E','C1','C2','D1','D2','D3','D4','D5','D6','D7'])
     armcli.call('REASON','','',[''])
-
-
-    
+ 
     armcli.manipulation.add_dataprop_to_ind("visitedAt", "R1", "Long", str(math.floor(time.time())))
-    #rospy.sleep(random.uniform(minwait, maxwait))
     
     armcli.manipulation.add_dataprop_to_ind("visitedAt", "R2", "Long", str(math.floor(time.time())))
-    #rospy.sleep(random.uniform(minwait, maxwait))
     
     armcli.manipulation.add_dataprop_to_ind("visitedAt", "R3", "Long", str(math.floor(time.time())))
-    #rospy.sleep(random.uniform(minwait, maxwait))
     
     armcli.manipulation.add_dataprop_to_ind("visitedAt", "R4", "Long", str(math.floor(time.time())))
-    #rospy.sleep(random.uniform(minwait, maxwait))
     armcli.call('REASON','','',[''])
     
     armcli.call('ADD','OBJECTPROP','IND',['isIn', 'Robot1', 'E'])

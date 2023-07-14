@@ -11,10 +11,22 @@ from actionlib import SimpleActionClient
 from assignment1.msg import PlanningAction, PlanningResult, PlanningGoal
 from std_srvs.srv import Empty
 
-"""def urgent_room(probability):
-    return random.random() < probability"""
+"""
+.. module:: Finite state machine
+   :platform: Unix
+   :synopsis: This module contains a state machine controlling the behaviour of a robot.
+.. moduleauthor:: Giovanni Di Marco giovannidimarco06@gmail.com
+"""
+
        
 def extract_values(strings_list):
+    """
+    Function that extracts values from a list of strings.
+
+    :param list strings_list: List of strings from which to extract values.
+    :returns: List of substrings that match a specific pattern.
+    :rtype: list
+    """
     matched_substrings = []
     for string in strings_list:
         start_index = string.find("#")
@@ -27,17 +39,31 @@ def extract_values(strings_list):
     return matched_substrings
 
 def choose_randomly(strings_list, character):
+    """
+    Function that selects a random string from a list.
+
+    :param list strings_list: List of strings to choose from.
+    :param str character: Character that must be in the selected string.
+    :returns: The selected string.
+    :rtype: str
+    """
     selected_string = None
     actual_position = rospy.get_param('ActualPosition')
-    """if actual_position in strings_list: ##### already implemented in the ontology
-        strings_list.remove(actual_position)"""
     while selected_string is None or character not in selected_string:
         selected_string = random.choice(strings_list)
         
     return selected_string
 
 def move_to_position_client(client, x, skip):
-    
+    """
+    Function that sends a goal to a ROS action server.
+
+    :param actionlib.SimpleActionClient client: The action client.
+    :param str x: The goal to send to the action server.
+    :param bool skip: Boolean to skip battery cancel.
+    :returns: The result of the action.
+    :rtype: PlanningResult
+    """
     client.wait_for_server()
     goal = PlanningGoal()
     goal.target_room = x  # Ad esempio, posizione da raggiungere
@@ -51,6 +77,12 @@ def move_to_position_client(client, x, skip):
 
 
 class WaitForMapState(smach.State):
+    """
+    State that waits for a map to be loaded.
+
+    :param None: No parameters are passed to this function.
+    :returns: None
+    """
     def __init__(self):
         smach.State.__init__(self, outcomes=['map_loaded'])
         self.service_client = rospy.ServiceProxy('initmap_service', Empty)
@@ -65,6 +97,12 @@ class WaitForMapState(smach.State):
         return 'map_loaded'
 
 class MoveInCorridorsState(smach.State):
+    """
+    State that moves the robot in corridors.
+
+    :param None: No parameters are passed to this function.
+    :returns: None
+    """
     def __init__(self):
         smach.State.__init__(self, outcomes=['battery_low', 'urgent_room_reached', 'no_urgent_available'], output_keys=['MoveInCorridorsState_output'])
         self.armcli = ArmorClient("example", "ontoRef")
@@ -74,9 +112,11 @@ class MoveInCorridorsState(smach.State):
         reachable_place_list_and_urgent = []
         #self.armcli.call('REASON','','',[''])
         canreach = self.armcli.call('QUERY','OBJECTPROP','IND',['canReach', 'Robot1'])
-        print ("can reach:", canreach)
+        
 
         reachable_place_list = extract_values (canreach.queried_objects)
+        print ("can reach:", reachable_place_list)
+        
         new__target_position = choose_randomly (reachable_place_list, "C") #C are all the corridors available <---------------------------
         result = move_to_position_client(self.client, new__target_position, False)
     
@@ -105,6 +145,12 @@ class MoveInCorridorsState(smach.State):
         
 
 class VisitRoomState(smach.State):
+    """
+    State that manages the visit to a room.
+
+    :param None: No parameters are passed to this function.
+    :returns: None
+    """
     def __init__(self):
         smach.State.__init__(self, outcomes=['room_visited', 'battery_low'], input_keys=['MoveInCorridorsState_output'])
         self.armcli = ArmorClient("example", "ontoRef")
@@ -144,6 +190,12 @@ class VisitRoomState(smach.State):
         return 'room_visited'
 
 class ChargingState(smach.State):
+    """
+    State that manages the charging of the robot.
+
+    :param None: No parameters are passed to this function.
+    :returns: None
+    """
     def __init__(self):
         smach.State.__init__(self, outcomes=['battery_full'])
         self.armcli = ArmorClient("example", "ontoRef")
@@ -185,6 +237,14 @@ class ChargingState(smach.State):
         return 'battery_full'
 
 def main():
+    """
+    Main function.
+
+    This function initializes the ROS node and creates and executes the state machine.
+
+    :param None: No parameters are passed to this function.
+    :returns: None
+    """
     rospy.init_node('fsm_node')
 
     # Create the top-level SMACH state machine

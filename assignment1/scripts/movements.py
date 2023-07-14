@@ -6,8 +6,27 @@ from armor_api.armor_client import ArmorClient
 import math
 import re
 import time
+"""
+.. module:: movements_server
+    :platform: Unix
+    :synopsis: This module contains a ROS action server for simulating robot movements.
+
+.. moduleauthor:: Giovanni Di Marco <giovannidimarco06@gmail.com>
+
+"""
 
 def simulating_movements(goal):
+    """
+    Function to simulate robot movements loosing time. 
+
+    :param goal: The goal message received from the action client. It contains the target room identifier and a flag to determine if the robot should skip the battery check.
+
+    :type goal: PlanningGoal
+    :rtype: None
+
+    The function first checks if the server received a preemption request from the client. If not, it proceeds to simulate the movement by sleeping for the specified duration. The robot's position and timestamps are updated in the ontology at the end of the movement. If a preemption request is received, it interrupts the movement and sends a result back to the client.
+
+    """
     armcli = ArmorClient("example", "ontoRef")
     target_room = goal.target_room 
     print ("Target room" + target_room)
@@ -52,7 +71,7 @@ def simulating_movements(goal):
             armcli.call('REASON','','',[''])
         
         
-        print (actual_position, target_room)
+        print ("moved from" + actual_position + "to" + target_room)
         
         rospy.set_param('ActualPosition', target_room)
         server.set_succeeded(result)
@@ -62,8 +81,11 @@ def simulating_movements(goal):
     
 
 if __name__ == "__main__":
+    """
+    This is the main entry point for the script. It initializes a ROS node and starts the action server.
+
+    """
     rospy.init_node("movements_server")
-    print ("loop main spin")
     
     server = actionlib.SimpleActionServer(
         "move_to_position",
