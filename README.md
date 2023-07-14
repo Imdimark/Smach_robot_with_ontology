@@ -4,6 +4,7 @@
 1. [Introduction](#introduction)
 2. [Software architecture](#sofar)
 3. [Installation and running procedure](#installation)
+4. [Behaviour](#video)
 
 
 
@@ -59,6 +60,18 @@ Note that the 3rd point deletes all the SWRL rules from the ontology. Hence, the
 1. Open the original ontology with Protégé, and copy-paste the three `SWLRule` (from the `SWRL` tab) back into the ontology manipulated with aRMOR. Now you can update the reasoner and check the knowledge it infers through Protégé.
 2. Make aRMOR save the ontology by exporting the `INFERENCES` (there is a dedicated command for it). In this way, you do not have to copy-paste back the rules in the ontology as in point 1. However, in this way, Protégé would not let you see any differences between the knowledge you asserted in the ontology, and the knowledge inferred by the reasoner.
 
+
+## Behaviour <a name="video"></a>
+
+
+
+https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/47b87029-80bd-4c74-83d3-069cad416995
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
 
 ![UML drawio](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/d8306a3a-8e4d-4c79-a1b3-f12376af0b95)
 
