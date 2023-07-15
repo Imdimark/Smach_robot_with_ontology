@@ -1,4 +1,4 @@
-# SmachRobot_ROS
+# Experimental robotics laboratory - Assignment1
 
 ## Index of contents:
 1. [Introduction](#introduction)
