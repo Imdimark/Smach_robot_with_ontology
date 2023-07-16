@@ -60,9 +60,17 @@ The external communications:
 - MovingDurationParam parameter to determine how long to "sleep" to simulate movement.
 - ActualPosition parameter to track and update the robot's current position.
 - - armor_interface_srv is the service, client-side, that interacts with the armor server for  load, query, and modify the ontology
+#### fsm_node node
+It implements a state machine for a robot. This program makes the robot move and behave according to its battery level and the rooms it should visit.
+The robot's behavior is represented by a finitestate machine. The states are WAIT_FOR_MAP, MOVE_IN_CORRIDORS, VISIT_ROOM, and CHARGING.
+
+- WAIT_FOR_MAP in this state, the robot waits for a map to be loaded, which it uses for navigation.
+- MOVE_IN_CORRIDORS  in this state, the robot moves in the corridors. It continues to move until its battery is low or an urgent room needs to be visited (in this case the state change only at the end of the movement.
+- VISIT_ROOM  in this state, the robot visits a room. If the battery is low, it transitions to the charging state. Once the room has been visited, the robot goes back to moving in the corridors.
+- CHARGING in this state, the robot moves to the charging station and starts charging its battery. Once the battery is fully charged, the robot goes back to moving in the corridors.
+
 ### State Viewpoint
 The following schema represents the possible states and when transition could happen 
-
 
 <img src="https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/d8306a3a-8e4d-4c79-a1b3-f12376af0b95" width="60%" height="60%">
 
