@@ -49,26 +49,23 @@ This node provides a ROS service named 'initmap_service', which is used to initi
 
 #### batterystatus node
 The node 'batterystatus' manages the battery status of a robot. 
-The external communications: 
+External communications: 
 - BatteryState topic published by this node to monitor the battery status, 
 - IsChargingParam ROS parameter, this node gets this parameter at every cycle iteration to understand if the robot is in corridor "E" at the charging station. This parameter is useful to see if the robot is currently charging.
  - move_to_position is a simpleactionclient used to cancel the moving (simulated by wasting time) when the battery is empty, in order to be able to receive the new one of moving in the charging station.
 #### movements_server node
 It is designed to simulate the movements of a robot using ROS and the Armor ontology and wasting time.
-The external communications:
+External communications:
 - move_to_position server-side service, the server listens on the 'move_to_position' action for PlanningAction goals. The goal message includes the target room and a flag indicating whether to skip battery checks. 
 - MovingDurationParam parameter to determine how long to "sleep" to simulate movement.
 - ActualPosition parameter to track and update the robot's current position.
-- - armor_interface_srv is the service, client-side, that interacts with the armor server for  load, query, and modify the ontology
+- armor_interface_srv is the service, client-side, that interacts with the armor server for  load, query, and modify the ontology
 #### fsm_node node
-It implements a state machine for a robot. This program makes the robot move and behave according to its battery level and the rooms it should visit.
-The robot's behavior is represented by a finitestate machine. The states are WAIT_FOR_MAP, MOVE_IN_CORRIDORS, VISIT_ROOM, and CHARGING.
-
-- WAIT_FOR_MAP in this state, the robot waits for a map to be loaded, which it uses for navigation.
-- MOVE_IN_CORRIDORS  in this state, the robot moves in the corridors. It continues to move until its battery is low or an urgent room needs to be visited (in this case the state change only at the end of the movement.
-- VISIT_ROOM  in this state, the robot visits a room. If the battery is low, it transitions to the charging state. Once the room has been visited, the robot goes back to moving in the corridors.
-- CHARGING in this state, the robot moves to the charging station and starts charging its battery. Once the battery is fully charged, the robot goes back to moving in the corridors.
-
+The FSM consists of four states, each represented by a smach.State class. This program makes the robot move and behave according to its battery level and the rooms it should visit.
+External communications:
+- BatteryState topic subscribed to monitor the robot's battery level
+- initmap_service service, clientside, to call the creation of the ontology
+- move_to_position SimpleActionClient which is likely responsible for controlling the robot's movements through the PlanningAction action
 ### State Viewpoint
 The following schema represents the possible states and when transition could happen 
 
@@ -82,7 +79,13 @@ The following schema is a rqt_graph generated starting from the running ros node
 ### Smach state machine
 As we said smach is a fundamental component for the entire architecture, leading the implementation of the finite state machine. As we can see in the video, through the command: ```rosrun smach_viewer smach_viewer.py``` we can follow actual state changes.
 <img src="https://github.com/Imdimark/EXPROLAB_Assignment1/assets/78663960/7cb4dc51-8ce3-4f5f-a7c0-62932a981d32" width="60%" height="60%">
+ 
+ The states are WAIT_FOR_MAP, MOVE_IN_CORRIDORS, VISIT_ROOM, and CHARGING.
 
+- WAIT_FOR_MAP in this state, the robot waits for a map to be loaded, which it uses for navigation.
+- MOVE_IN_CORRIDORS  in this state, the robot moves in the corridors. It continues to move until its battery is low or an urgent room needs to be visited (in this case the state change only at the end of the movement.
+- VISIT_ROOM  in this state, the robot visits a room. If the battery is low, it transitions to the charging state. Once the room has been visited, the robot goes back to moving in the corridors.
+- CHARGING in this state, the robot moves to the charging station and starts charging its battery. Once the battery is fully charged, the robot goes back to moving in the corridors.
 ## Installation and running procedure <a name="installation"></a>
 Some generic requirements can be necessary(like Python and ros), but the suggestion is to start with this container (based on Linux):  [carms84/exproblab](https://hub.docker.com/r/carms84/exproblab) 
 
