@@ -3,7 +3,7 @@
 ## Index of contents:
 1. [Introduction](#introduction)
 2. [Behaviour](#video)
-3. [Software architecture](#sofar)
+3. [Software architecture](#soft)
 4. [Installation and running procedure](#installation)
 5. [Working hypothesis and environment](#hyp)
 6. [Authors and contacts](#contacts)
@@ -39,7 +39,7 @@ This video shows how the state machine works and goes through all the states. Th
 - **FSM** is the core of the system, this window shows up the changing of the states and some info. To better understand is suggested to follow state changes throughout the smach_viewer. 
 
 
-## Software architecture <a name="sofar"></a>
+## Software architecture <a name="soft"></a>
 ### software components:
 #### InitMapNode node
 This node provides a ROS service named 'initmap_service', which is used to initialize a topological map used for robot navigation. The external communications of this component are mainly handled through ROS:
