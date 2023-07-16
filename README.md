@@ -12,17 +12,22 @@
 
 
 ## Introduction <a name="introduction"></a>
-The project at hand focuses on the development and implementation of a surveillance robot, engineered to operate within an indoor environment. The environment consists of a 2D layout with four rooms and three corridors. For an initial starting point, the robot is placed in a specific location referred to as 'E'.
+The project at hand focuses on the development and implementation of a surveillance robot, engineered to operate within an indoor environment. The environment consists of a 2D layout with four rooms and three corridors. The robot simulates its movements wasting time For an initial starting point, the robot is placed in a specific location referred to as 'E'.
 
-<img src="https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/471cb60b-42c2-490f-9482-4c0e266a9d8f" width="200" height="200">
+<img src="https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/471cb60b-42c2-490f-9482-4c0e266a9d8f" width="40%" height="40%">
 
+The development of this package primarily leverages two other packages: 
+
+  1. [SMACH](http://wiki.ros.org/smach) for implementing and managing the finite state machine
+  2. [ARMOR](http://wiki.ros.org/smach) in order to load, query and modify multiple ontologies and requires very little knowledge of OWL APIs and Java.
+
+
+
+
+## Behaviour <a name="video"></a>
 The operational structure of the robot is based on a topological map, which it constructs using incoming data about the connections between various rooms, corridors, and doorways. This information aids the robot in maneuvering around its environment and effectively fulfilling its surveillance duties.
 The robot's actions follow an endless cycle: it moves to a new location, waits for a while, and then moves again. This process continues until the robot's energy levels run low, at which point it returns to location 'E' for a recharge before resuming its routine.
 When the robot's battery is not low, it navigates through the environment with a specific policy in mind. It's programmed to stay primarily in the corridors, keeping a closer eye on them. However, if a nearby room hasn't been inspected for a while, the robot will deviate from its path to check the room, ensuring complete and thorough surveillance.
-
-## Behaviour <a name="video"></a>
-
-
 
 https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/47b87029-80bd-4c74-83d3-069cad416995
 
@@ -30,22 +35,40 @@ This video shows how the state machine works and goes through all the states. Th
 
 - **state of the battery** that is going up or down depending if it is discharging or charging (different state machine states)
 - **movements** that shows the state of the movements like where the robot is, where the robot chan goes, and if the movements have been done
-- **ontology** this node is in charge to contact the armor service the ontology and initialize the map and the visited time of the rooms (useful for the urgency threshold), the windows show up when the process is done and the fsm can proceed to the next state.
+- **ontology** this node is in charge to contact the ARMOR service the ontology and initialize the map and the visited time of the rooms (useful for the urgency threshold), the windows show up when the process is done and the fsm can proceed to the next state.
 - **FSM** is the core of the system, this window shows up the changing of the states and some info. To better understand is suggested to follow state changes throughout the smach_viewer. 
 
 
 ## Software architecture <a name="sofar"></a>
+### software components:
+#### InitMapNode node
+This node provides a ROS service named 'initmap_service', which is used to initialize a topological map used for robot navigation. The external communications of this component are mainly handled through ROS:
+- initmap_service a service called by the fsm node at the beginning of the finite state machine.
+- ActualPosition parameter used to set the knowledge of the actual position, this parameter is used by the movements node to have the knowledge about the starting position and update the onology with the appropriate query. In this specific node, it initializes the starting position in corridor "E".
+- armor_interface_srv is the service, client-side, that interacts with the armor server for  load, query, and modify the ontology
+
+#### batterystatus node
+The node 'batterystatus' manages the battery status of a robot. 
+The external communications: 
+- BatteryState topic published by this node to monitor the battery status, 
+- IsChargingParam ROS parameter, this node gets this parameter at every cycle iteration to understand if the robot is in corridor "E" at the charging station. This parameter is useful to see if the robot is currently charging.
+ - move_to_position is a simpleactionclient used to cancel the moving (simulated by wasting time) when the battery is empty, in order to be able to receive the new one of moving in the charging station.
+
 
 ### State Viewpoint
-The following schema represents the possible states and when transition could appen 
-![UML drawio](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/d8306a3a-8e4d-4c79-a1b3-f12376af0b95)
-### Nodes
-The following schema is a rqt_graph generated starting from the running ros running architecture and how the nodes communicate with each other.
+The following schema represents the possible states and when transition could happen 
 
-![rosgraph](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/c9032477-4bab-49e4-8fcd-098970b08404)
+
+<img src="https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/d8306a3a-8e4d-4c79-a1b3-f12376af0b95" width="60%" height="60%">
+
+### Nodes
+The following schema is a rqt_graph generated starting from the running ros nodes and represents their architecture and how the nodes communicate with each other.
+
+<img src="https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/c9032477-4bab-49e4-8fcd-098970b08404" width="60%" height="60%">
+
 ### Smach state machine
 As we said smach is a fundamental component for the entire architecture, leading the implementation of the finite state machine. As we can see in the video, through the command: ```rosrun smach_viewer smach_viewer.py``` we can follow actual state changes.
-<img src="https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/7cb4dc51-8ce3-4f5f-a7c0-62932a981d32" width="550" height="350">
+<img src="https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/7cb4dc51-8ce3-4f5f-a7c0-62932a981d32" width="60%" height="60%">
 
 ## Installation and running procedure <a name="installation"></a>
 Some generic requirements can be necessary(like Python and ros), but the suggestion is to start with this container (based on Linux):  [carms84/exproblab](https://hub.docker.com/r/carms84/exproblab) 
@@ -96,7 +119,7 @@ The system uses ROS nodes and components like ARMOR and SMACH implements a very 
 Conformation of the room must be declared a prior (like doors, and rooms) and it could be more agnostic. The battery mechanism works very well, but the robot reaches the charging station ( in corridor E) without using the remaining battery. This is very unrealistic.
 
 ## Possible technical improvements
-A possible technical improvement be implemented a simulating 3d environment environment like gazebo and Copelliasim. Next to that could be possible to implement an algorithm that preserves the battery to make it possible for the robot to reach the charging station. Regarding the agnosticism of the environment in the code, reaching information through a sensor like a camera could be useful to build the ontology before starting.
+A possible technical improvement is implementing a simulated 3d environment environment like a gazebo. Next to that could be possible to implement an algorithm that preserves the battery to make it possible for the robot to reach the charging station. Regarding the agnosticism of the environment in the code, reaching information through a sensor like a camera could be useful to build the ontology before starting.
 
 ## Authors and contacts <a name="contacts"></a>
 
