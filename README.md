@@ -14,7 +14,7 @@
 ## Introduction <a name="introduction"></a>
 The project at hand focuses on the development and implementation of a surveillance robot, engineered to operate within an indoor environment. The environment consists of a 2D layout with four rooms and three corridors. The robot simulates its movements wasting time For an initial starting point, the robot is placed in a specific location referred to as 'E'.
 
-<img src="https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/471cb60b-42c2-490f-9482-4c0e266a9d8f" width="40%" height="40%">
+<img src="https://github.com/Imdimark/EXPROLAB_Assignment1/assets/78663960/471cb60b-42c2-490f-9482-4c0e266a9d8f" width="40%" height="40%">
 
 The development of this package primarily leverages two other packages: 
 
@@ -29,7 +29,7 @@ The operational structure of the robot is based on a topological map, which it c
 The robot's actions follow an endless cycle: it moves to a new location, waits for a while, and then moves again. This process continues until the robot's energy levels run low, at which point it returns to location 'E' for a recharge before resuming its routine.
 When the robot's battery is not low, it navigates through the environment with a specific policy in mind. It's programmed to stay primarily in the corridors, keeping a closer eye on them. However, if a nearby room hasn't been inspected for a while, the robot will deviate from its path to check the room, ensuring complete and thorough surveillance.
 
-https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/47b87029-80bd-4c74-83d3-069cad416995
+https://github.com/Imdimark/EXPROLAB_Assignment1/assets/78663960/47b87029-80bd-4c74-83d3-069cad416995
 
 This video shows how the state machine works and goes through all the states. The window in the middle represents graphically how the smach machine works and which is the actual state. The other four windows, made by gnome terminals represent the four nodes that are running:
 
@@ -72,16 +72,16 @@ The robot's behavior is represented by a finitestate machine. The states are WAI
 ### State Viewpoint
 The following schema represents the possible states and when transition could happen 
 
-<img src="https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/d8306a3a-8e4d-4c79-a1b3-f12376af0b95" width="60%" height="60%">
+<img src="https://github.com/Imdimark/EXPROLAB_Assignment1/assets/78663960/d8306a3a-8e4d-4c79-a1b3-f12376af0b95" width="60%" height="60%">
 
 ### Nodes
 The following schema is a rqt_graph generated starting from the running ros nodes and represents their architecture and how the nodes communicate with each other.
 
-<img src="https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/c9032477-4bab-49e4-8fcd-098970b08404" width="60%" height="60%">
+<img src="https://github.com/Imdimark/EXPROLAB_Assignment1/assets/78663960/c9032477-4bab-49e4-8fcd-098970b08404" width="60%" height="60%">
 
 ### Smach state machine
 As we said smach is a fundamental component for the entire architecture, leading the implementation of the finite state machine. As we can see in the video, through the command: ```rosrun smach_viewer smach_viewer.py``` we can follow actual state changes.
-<img src="https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/7cb4dc51-8ce3-4f5f-a7c0-62932a981d32" width="60%" height="60%">
+<img src="https://github.com/Imdimark/EXPROLAB_Assignment1/assets/78663960/7cb4dc51-8ce3-4f5f-a7c0-62932a981d32" width="60%" height="60%">
 
 ## Installation and running procedure <a name="installation"></a>
 Some generic requirements can be necessary(like Python and ros), but the suggestion is to start with this container (based on Linux):  [carms84/exproblab](https://hub.docker.com/r/carms84/exproblab) 
@@ -89,11 +89,11 @@ Some generic requirements can be necessary(like Python and ros), but the suggest
 Some mandatory prerequisites are needed:
 - Download the project in your workspace:
   - ```cd <myworkspace>/src/```
-  - ```git clone https://github.com/Imdimark/SmachRobot_ROS```
+  - ```git clone https://github.com/Imdimark/EXPROLAB_Assignment1```
 - Install gnome terminal: ```sudo apt-get install gnome-terminal```
 - Install armor, following this guideline: https://github.com/EmaroLab/armor
 - Install smach: http://wiki.ros.org/smach
-- Download the topological map ``` git clone https://github.com/buoncubi/topological_map``` under the project folder( ```roscd SmachRobot_ROS``` )
+- Download the topological map ``` git clone https://github.com/buoncubi/topological_map``` under the project folder( ```roscd EXPROLAB_Assignment1``` )
 
 First running of the code:
 - If the roscore is not running let's do: ```roscore & ```
