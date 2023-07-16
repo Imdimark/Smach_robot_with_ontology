@@ -53,8 +53,13 @@ The external communications:
 - BatteryState topic published by this node to monitor the battery status, 
 - IsChargingParam ROS parameter, this node gets this parameter at every cycle iteration to understand if the robot is in corridor "E" at the charging station. This parameter is useful to see if the robot is currently charging.
  - move_to_position is a simpleactionclient used to cancel the moving (simulated by wasting time) when the battery is empty, in order to be able to receive the new one of moving in the charging station.
-
-
+#### movements_server node
+It is designed to simulate the movements of a robot using ROS and the Armor ontology and wasting time.
+The external communications:
+- move_to_position server-side service, the server listens on the 'move_to_position' action for PlanningAction goals. The goal message includes the target room and a flag indicating whether to skip battery checks. 
+- MovingDurationParam parameter to determine how long to "sleep" to simulate movement.
+- ActualPosition parameter to track and update the robot's current position.
+- - armor_interface_srv is the service, client-side, that interacts with the armor server for  load, query, and modify the ontology
 ### State Viewpoint
 The following schema represents the possible states and when transition could happen 
 
