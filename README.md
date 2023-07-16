@@ -37,9 +37,15 @@ This video shows how the state machine works and goes through all the states. Th
 ## Software architecture <a name="sofar"></a>
 
 ### State Viewpoint
-![UML drawio](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/c05c14ef-7a2f-4e12-8f1d-90d232c6b0c8)
+The following schema represents the possible states and when transition could appen 
+![UML drawio](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/d8306a3a-8e4d-4c79-a1b3-f12376af0b95)
+### Nodes
+The following schema is a rqt_graph generated starting from the running ros running architecture and how the nodes communicate with each other.
 
-
+![rosgraph](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/c9032477-4bab-49e4-8fcd-098970b08404)
+### Smach state machine
+As we said smach is a fundamental component for the entire architecture, leading the implementation of the finite state machine. As we can see in the video, through the command: ```rosrun smach_viewer smach_viewer.py``` we can follow actual state changes.
+<img src="https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/7cb4dc51-8ce3-4f5f-a7c0-62932a981d32" width="550" height="350">
 
 ## Installation and running procedure <a name="installation"></a>
 Some generic requirements can be necessary(like Python and ros), but the suggestion is to start with this container (based on Linux):  [carms84/exproblab](https://hub.docker.com/r/carms84/exproblab) 
@@ -75,7 +81,7 @@ Due to an internal bug of Protégé, when you save an ontology manipulated with 
 4. Save the ontology from the text editor.
 5. Now you can open the ontology with Protégé.
 
-Note that the 3rd point deletes all the SWRL rules from the ontology. Hence, the inferences of the reasoner are different from the ones that you got within ROS. To fully visualise the reasoner inferences from Protégé you can proceed in two ways.
+Note that the 3rd point deletes all the SWRL rules from the ontology. Hence, the inferences of the reasoner are different from the ones that you got within ROS. To fully visualize the reasoner inferences from Protégé you can proceed in two ways.
 
 1. Open the original ontology with Protégé, and copy-paste the three `SWLRule` (from the `SWRL` tab) back into the ontology manipulated with aRMOR. Now you can update the reasoner and check the knowledge it infers through Protégé.
 2. Make aRMOR save the ontology by exporting the `INFERENCES` (there is a dedicated command for it). In this way, you do not have to copy-paste back the rules in the ontology as in point 1. However, in this way, Protégé would not let you see any differences between the knowledge you asserted in the ontology, and the knowledge inferred by the reasoner.
@@ -105,9 +111,7 @@ Linkedin: https://www.linkedin.com/in/giovanni-di-marco-068453b1/
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
-![UML drawio](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/d8306a3a-8e4d-4c79-a1b3-f12376af0b95)
 
-![Screenshot 2023-07-14 100123](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/7cb4dc51-8ce3-4f5f-a7c0-62932a981d32)
 
 
 
@@ -116,7 +120,7 @@ Linkedin: https://www.linkedin.com/in/giovanni-di-marco-068453b1/
 miglioramenti futuri:fare in modo che arrivi alla stazione di ricarica con la batteria residua
 
 In order to implement the mainly in corridor behaviour, the urgent threshold in the ontology has been changed.
-![rosgraph](https://github.com/Imdimark/SmachRobot_ROS/assets/78663960/c9032477-4bab-49e4-8fcd-098970b08404)
+
 
 
 
